@@ -43,7 +43,7 @@ def test_approx_nn(method, traindata, testdata):
 
 
 DATA_PATH = '../../data/'
-if __name__ == '__main__':
+if True: #__name__ == '__main__':
 
     #Load data and make small subset for debugging
     docdata  = DocumentData.read_in_data(os.path.join(DATA_PATH,  "sim_docdata.mtx"), True)
