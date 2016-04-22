@@ -12,6 +12,14 @@ import pandas as pd
 import pickle as pkl
 
 
+def make_dense(document):
+    key = [0 for idx in xrange(0, D)]
+    for word_id, count in document.iteritems():
+        #words are indexed from 1
+        key[word_id-1] = count
+    return key
+
+
 def test_approx_nn(method, traindata, testdata):
         avg_distance = 0
         if method == "hashing":
@@ -25,14 +33,12 @@ def test_approx_nn(method, traindata, testdata):
             #train
             kdt = KDTree(D)
             for i, document in traindata.iteritems():
-                key = [0 for idx in xrange(0, D)]
-                for word_id, count in document.iteritems():
-                    #words are indexed from 1
-                    key[word_id-1] = count
+                key = make_dense(document)
                 kdt.insert(key, i)
             #time test
             t0 = time.time()
             for _, testdoc in testdata.iteritems():
+                key = make_dense(testdoc)
                 neighbor = kdt.nearest(key, alpha)
                 avg_distance += EvalUtil.distance(testdoc, docdata[neighbor])
 
@@ -49,7 +55,7 @@ if True: #__name__ == '__main__':
     docdata  = DocumentData.read_in_data(os.path.join(DATA_PATH,  "sim_docdata.mtx"), True)
     testdata = DocumentData.read_in_data(os.path.join(DATA_PATH, "test_docdata.mtx"), True)
 
-    test_mode = False
+    test_mode = True
     if test_mode:
         train_n, test_n  = (100, 50)
         def first_n(long_dict, n):
