@@ -45,20 +45,22 @@ def test_approx_nn(method, traindata, testdata):
 DATA_PATH = '../../data/'
 if __name__ == '__main__':
 
-    #Load data and define tester routine hardwired to these data
+    #Load data and make small subset for debugging
     docdata  = DocumentData.read_in_data(os.path.join(DATA_PATH,  "sim_docdata.mtx"), True)
     testdata = DocumentData.read_in_data(os.path.join(DATA_PATH, "test_docdata.mtx"), True)
 
-    train_n, test_n  = (100, 10)
-    def first_n(long_dict, n):
-        my_keys = long_dict.keys()[0:n]
-        return {my_key:long_dict[my_key] for my_key in my_keys}
-    _ = "Currently testing on just %d and %d documents, train and test" % (train_n, test_n)
-    warnings.warn(_)
-    docdata = first_n(docdata, train_n)
-    testdata = first_n(testdata, test_n)
-
-
+    test_mode = False
+    if test_mode:
+        train_n, test_n  = (100, 50)
+        def first_n(long_dict, n):
+            my_keys = long_dict.keys()[0:n]
+            return {my_key:long_dict[my_key] for my_key in my_keys}
+        _ = "Currently testing on just %d and %d documents, train and test" % (train_n, test_n)
+        warnings.warn(_)
+        _ = "Also testing code with training set equal to test set (solves LSH empty bin problem)"
+        warnings.warn(_)
+        docdata = first_n(docdata, train_n)
+        testdata = first_n(docdata, test_n)
 
     #Parameters
     D = 1000
@@ -73,17 +75,20 @@ if __name__ == '__main__':
     for alpha in avals:
         results.append(test_approx_nn(method = "kdtree" , traindata=docdata, testdata = testdata))
 
+    #save results to results folder, with plot and printing to screen.
+    metadata = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "test_mode==" + str(test_mode)
+    f = open("results/LSH_vs_KDT_%s.pkl" % metadata, mode = 'w')
+    pkl.dump(obj=results, file=f)
+
     times =     [r.avg_time     for r in results]
     distances = [r.avg_distance for r in results]
     methods =   [r.method[0:3]  for r in results]
     results_df = pd.DataFrame(data = {"times" : times, "distances" : distances, "methods" : methods})
+    print results_df
     p = gg.ggplot(data = results_df, aesthetics = gg.aes(x = "times",
                                                          y = "distances",
                                                          label = "methods")) + \
         gg.geom_text() + \
         gg.ggtitle("LSH and KD trees: tradeoffs") + \
         gg.xlab("Average query time  ") + gg.ylab("Average L2 distance from query point)")
-    print os.getcwd()
-    nowstr = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    gg.ggsave(filename="lsh_vs_kdt_%s.png" % nowstr, plot = p)
-    pkl.pickle(results, filename="lsh_vs_kdt_%s.pkl" % nowstr)
+    gg.ggsave(filename="results/LSH_vs_KDT_%s.png" % metadata, plot = p)

@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ec105dbe-4387-41bd-83ed-63a21790f1c8" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/2DGaussianMixture.csv" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NearestNeighborSearch/methods/GaussianRandomProjection.py" afterPath="$PROJECT_DIR$/NearestNeighborSearch/methods/GaussianRandomProjection.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NearestNeighborSearch/kdtree/KDNode.py" afterPath="$PROJECT_DIR$/NearestNeighborSearch/kdtree/KDNode.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NearestNeighborSearch/analysis/KDTreeAnalysis.py" afterPath="$PROJECT_DIR$/NearestNeighborSearch/analysis/KDTreeAnalysis.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NearestNeighborSearch/methods/LocalitySensitiveHash.py" afterPath="$PROJECT_DIR$/NearestNeighborSearch/methods/LocalitySensitiveHash.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/NearestNeighborSearch/analysis/MethodComparison.py" afterPath="$PROJECT_DIR$/NearestNeighborSearch/analysis/MethodComparison.py" />
     </list>
     <ignored path="big_data_hw2_code.iws" />
@@ -31,8 +26,8 @@
       <file leaf-file-name="MethodComparison.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/analysis/MethodComparison.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.27314815">
-              <caret line="55" column="91" selection-start-line="55" selection-start-column="91" selection-end-line="55" selection-end-column="91" />
+            <state vertical-scroll-proportion="0.5208333">
+              <caret line="51" column="21" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -44,9 +39,19 @@
         <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/analysis/KDTreeAnalysis.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="46" column="17" selection-start-line="46" selection-start-column="17" selection-end-line="46" selection-end-column="17" />
+              <caret line="3" column="15" selection-start-line="3" selection-start-column="15" selection-end-line="3" selection-end-column="15" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KDTree.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/kdtree/KDTree.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
               <folding>
-                <element signature="e#0#11#0" expanded="true" />
+                <element signature="e#0#32#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -156,7 +161,7 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="restartRequiresConfirmation" value="true" />
   </component>
-  <component name="RunManager" selected="Python.KDTreeAnalysis">
+  <component name="RunManager" selected="Python.MethodComparison">
     <configuration default="false" name="MethodComparison" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -390,7 +395,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="31" />
+      <option name="time" value="32" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -411,14 +416,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/analysis/TestResult.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38194445">
-          <caret line="11" column="19" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/methods/NeighborDistance.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19337016">
@@ -432,16 +429,6 @@
         <state vertical-scroll-proportion="0.63909775">
           <caret line="117" column="65" selection-start-line="117" selection-start-column="65" selection-end-line="117" selection-end-column="65" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/kdtree/KDTree.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.736842">
-          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -529,20 +516,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/analysis/TestResult.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5902778">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/kdtree/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/analysis/KDTreeAnalysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="46" column="17" selection-start-line="46" selection-start-column="17" selection-end-line="46" selection-end-column="17" />
+          <caret line="3" column="15" selection-start-line="3" selection-start-column="15" selection-end-line="3" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/kdtree/KDTree.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="126" column="0" selection-start-line="126" selection-start-column="0" selection-end-line="126" selection-end-column="0" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/NearestNeighborSearch/analysis/MethodComparison.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27314815">
-          <caret line="55" column="91" selection-start-line="55" selection-start-column="91" selection-end-line="55" selection-end-column="91" />
+        <state vertical-scroll-proportion="0.5208333">
+          <caret line="51" column="21" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
