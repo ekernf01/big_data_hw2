@@ -115,7 +115,7 @@ class KDNode(object):
         @param alpha: float
         """
         # 1. if kd is empty then set dist-sqd to infinity and exit.
-        if kdnode is None:
+        if kdnode is None or kdnode.key is None or target is None:
             return
 
         # 2. s := split field of kd

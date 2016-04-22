@@ -48,8 +48,8 @@ class GaussianRandomProjection(object):
         @param document: dict[int => int/float] - document represented as dictionary of word ids => counts
         """
         hashed_document = [0.0 for _ in self.m]
-        # TODO: hash/project the document onto the "m" gaussian random projections
-        raise Exception("Please implement the GaussianRandomProjection.hash_document method")
+        for hash_ind in xrange(self.m):
+            hashed_document[hash_ind] = self.project_document(document, self.projection_vectors[hash_ind])
         return hashed_document
 
 
@@ -60,6 +60,9 @@ class GaussianRandomProjection(object):
         @param vector: [float] - a vector on which to project the document
         """
         dotprod = 0.0
-        # TODO: fill in code for projecting the document
-        raise Exception("Please implement the GaussianRandomProjection.project_document method")
+
+        #sparse dot product: keys exist only for nonzero values
+        for word_id in document:
+            #words originally numbered 1 to 1000, but vector goes 0 to 999
+            dotprod += document[word_id] * vector[word_id - 1]
         return dotprod

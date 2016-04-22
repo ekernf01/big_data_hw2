@@ -41,18 +41,18 @@ class LocalitySensitiveHash(object):
             self.hashed_documents[lsh_bin].add(doc_id)
 
 
-    def nearest_neighbor(self, document, depth):
+    def nearest_neighbor(self, query_document, depth):
         """
         Gets the (approximate) nearest neighbor to the given document
         @param document: dict[int => int/float] - a document
         @param depth: int - the maximum number of bits to change concurrently
         """
-        hashed_document = self.hash_document(document)
-        nearest = self._nearest_neighbor(document, hashed_document, None, depth, 0)
+        hashed_document = self.hash_document(query_document)
+        nearest = self._nearest_neighbor(query_document, hashed_document, None, depth, 0)
         return nearest
 
 
-    def _nearest_neighbor(self, document, hashed_document, cur_nearest, depth, next_index):
+    def _nearest_neighbor(self, query_document, hashed_document, cur_nearest, depth, next_index):
         """
         Helper function to get the (approximate) nearest neighbor to the given document
         @param document: dict[int => int/float] - a document
@@ -65,29 +65,35 @@ class LocalitySensitiveHash(object):
             return cur_nearest
         if cur_nearest is None:
             cur_nearest = NeighborDistance(0, float("inf"))
-        self.check_bin(document, hashed_document, cur_nearest)
+        cur_nearest = self.check_bin(query_document, hashed_document, cur_nearest)
         if depth > 0:
             # check the bins one away from the current bin
             # if we still have more depth to go
             for j in xrange(next_index, self.m):
                 hashed_document[j] = not hashed_document[j]
-                self._nearest_neighbor(document, hashed_document, cur_nearest, depth - 1, j + 1)
+                cur_nearest = self._nearest_neighbor(query_document, hashed_document, cur_nearest, depth - 1, j + 1)
                 hashed_document[j] = not hashed_document[j]
         return cur_nearest
 
 
-    def check_bin(self, document, hashed_document, cur_nearest):
+    def check_bin(self, query_document, hashed_document, cur_nearest):
         """
-        Checks the documents that are hashsed to the given bin and updates with
+        Checks the documents that are hashed to the given bin and updates with
         nearest neighbor found.
-        @param document: dict[int => int/float] - list of documents
-        @param hashed_document: [bool] - hashed document
-        @param cur_nearest: NeighborDistance - the currently (approximately) nearest neighbor
+        @param query_document: dict[int => int/float] - list of word counts by token id
+        @param hashed_document: [bool] - hashed document (bin id)
+        @param cur_nearest: NeighborDistance - the current candidate for nearest neighbor
         """
-        # TODO: Fill in code for checking a bin for the nearest neighbor
-        #       Code should look through all the documents in a bin and
-        #       update cur_nearest with the nearest one found, if closer than cur_nearest already is
-        raise Exception("Please implement the LocalitySensitiveHash.check_bin method")
+        inthash = self.convert_boolean_array_to_integer(hashed_document)
+        if not self.hashed_documents.has_key(inthash):
+            return cur_nearest
+        this_bin = self.hashed_documents[inthash]
+        for doc_id in this_bin:
+            doc = self.documents[doc_id]
+            dist = EvalUtil.distance(doc, query_document)
+            if dist < cur_nearest.distance:
+                cur_nearest = NeighborDistance(doc, dist)
+        return cur_nearest
 
 
     def get_bin(self, document):
@@ -103,9 +109,9 @@ class LocalitySensitiveHash(object):
         Hashes a document to a boolean array using the set of projection vectors
         @param document: dict[int => int/float] - a document
         """
-        hashed_document = [False for _ in xrange(self.m)]
-        # TODO: fill in code for creating the hashed document
-        raise Exception("Please implement the LocalitySensitiveHash.hash_document method")
+        hashed_document = [False for _ in xrange(self.m)] #m is the number of hash functions
+        for hash_ind in xrange(self.m):
+            hashed_document[hash_ind] = 0 < self.project_document(document, self.projection_vectors[hash_ind])
         return hashed_document
 
 
@@ -116,9 +122,11 @@ class LocalitySensitiveHash(object):
         @param vector: [float] - a projection vector
         """
         dotprod = 0.0
-        # TODO: fill in code for projecting the document
-        raise Exception("Please implement the LocalitySensitiveHash.project_document method")
-        return False
+        #sparse dot product: keys exist only for nonzero values
+        for word_id in document:
+            #words originally numbered 1 to 1000, but vector goes 0 to 999
+            dotprod += document[word_id] * vector[word_id - 1]
+        return dotprod
 
 
     def convert_boolean_array_to_integer(self, bool_array):
@@ -130,4 +138,4 @@ class LocalitySensitiveHash(object):
         for i, val in enumerate(bool_array):
             if val:
                 value += math.pow(2, i)
-        return value
+        return int(value)

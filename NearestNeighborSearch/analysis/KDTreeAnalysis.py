@@ -5,6 +5,7 @@ from kdtree.KDTree import KDTree
 import data.RandomData as RandomData
 import util.EvalUtil as EvalUtil
 from analysis.TestResult import TestResult
+from methods.GaussianRandomProjection import GaussianRandomProjection
 
 
 def test_kd_tree(n, D, n_test, alphas):
@@ -37,6 +38,28 @@ def test_kd_tree(n, D, n_test, alphas):
     return times
 
 
+def test_rp_kdtree(method, traindata, testdata, m):
+    avg_distance = 0
+
+    #train
+    kdt = KDTree(m)
+    for i, document in traindata.iteritems():
+        traindata = GaussianRandomProjection(traindata)
+        kdt.insert(key, i)
+    #time test
+    t0 = time.time()
+    for _, testdoc in testdata.iteritems():
+        neighbor = kdt.nearest(key, alpha)
+        avg_distance += EvalUtil.distance(testdoc, docdata[neighbor])
+
+        #finish timing, report results
+    mean_time = (time.time() - t0) / len(testdata)
+    mean_distance = avg_distance   / len(testdata)
+    return TestResult(method, n=len(docdata), D=m, alpha = 1, avg_time=mean_time, avg_distance=mean_distance)
+
+
 if __name__ == "__main__":
-    pass
     # TODO: run tests here
+    test_kd_tree(n = 100, D = 1000, n_test = 100, alphas = [1, 5, 10])
+
+
