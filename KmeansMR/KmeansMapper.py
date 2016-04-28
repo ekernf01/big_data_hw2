@@ -46,7 +46,19 @@ class KmeansMapper:
 
     def map(self, line):
         # TODO: Your code goes here -- call `self.emit(key, value)`
-        pass
+
+        #find cluster assignment by brute force
+        doc = Document(line)
+        cluster_uid = None
+        sqdist_to_nearest = float('inf')
+        for cluster_k in self.clusters:
+            sqdist_k = MathUtil.compute_distance(map1 = cluster_k.tfidf, map2 = doc.tfidf, squared=True)
+            if sqdist_k <= sqdist_to_nearest:
+                cluster_uid = cluster_k.uid
+
+        #dutifully emit. Thanks (to Emily? Sham? Amrit?) for the lovely starter code.
+        self.emit(key = line, value = {"doc":doc, "cluster_uid":cluster_uid})
+        return
 
 
 if __name__ == '__main__':

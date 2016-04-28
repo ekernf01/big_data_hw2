@@ -47,7 +47,7 @@ class GaussianRandomProjection(object):
         Hashes a document using the random projections
         @param document: dict[int => int/float] - document represented as dictionary of word ids => counts
         """
-        hashed_document = [0.0 for _ in self.m]
+        hashed_document = [0.0 for _ in range(self.m)]
         for hash_ind in xrange(self.m):
             hashed_document[hash_ind] = self.project_document(document, self.projection_vectors[hash_ind])
         return hashed_document

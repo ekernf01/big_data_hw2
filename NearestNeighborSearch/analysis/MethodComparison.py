@@ -56,7 +56,7 @@ if True: #__name__ == '__main__':
     docdata  = DocumentData.read_in_data(os.path.join(DATA_PATH,  "sim_docdata.mtx"), True)
     testdata = DocumentData.read_in_data(os.path.join(DATA_PATH, "test_docdata.mtx"), True)
 
-    test_mode = False
+    test_mode = True
     if test_mode:
         train_n, test_n  = (100, 50)
         def first_n(long_dict, n):

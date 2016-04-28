@@ -7,8 +7,8 @@ import HDFSUtil
 
 
 # TODO: change these to work with your settings
-KMEANS_HDFS_PATH = "/user/xxx/kmeans"
-HADOOP_PREFIX = "/path/to/hadoop-1.2.1"
+KMEANS_HDFS_PATH = "Desktop/spring_2016/big_data/hw2/big_data_hw2_code/KmeansMR/kmeans_hdfs"
+HADOOP_PREFIX = "/usr/local/Cellar/hadoop/2.7.1/bin"
 
 
 class KmeansMRDriver(object):

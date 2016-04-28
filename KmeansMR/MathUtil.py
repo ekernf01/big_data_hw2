@@ -1,7 +1,7 @@
 import math
 
 
-def compute_distance(map1, map2):
+def compute_distance(map1, map2, squared = False):
     """
     Computes Euclidean distance between two sparse vectors, where the sparse vectors are
     represented as dicts with float values.
@@ -14,4 +14,6 @@ def compute_distance(map1, map2):
         map1val = map1.get(key, 0.0)
         map2val = map2.get(key, 0.0)
         dist += math.pow(map1val - map2val, 2)
+    if squared:
+        return dist
     return math.sqrt(dist)
