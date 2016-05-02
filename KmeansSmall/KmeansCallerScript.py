@@ -23,11 +23,11 @@ print synth_data.head(5)
 
 datestring = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-def prob231b():
+def prob231b(initialization = "regular"):
     cluster_counts = [2,3,5,10,15,20]
     kmcalls = [0 for i in cluster_counts]
     for i, num_clusters in enumerate(cluster_counts):
-        kmcalls[i] = KmeansCall(features_only, labels_only, num_clusters)
+        kmcalls[i] = KmeansCall(features_only, labels_only, num_clusters, initialization)
         kmcalls[i].run_kmeans(verbose = False)
 
         df_to_plot = kmcalls[i].data.copy()
@@ -89,9 +89,10 @@ def prob231g():
 
 
 
-prob231g()
 
 #prob231b()
+
+#prob231b(initialization = "firstpoints")
 
 #prob231cd(initialization = "regular", num_trials=20)
 #obj_stats = prob231cd_recover(initialization = "regular")
@@ -100,3 +101,5 @@ prob231g()
 #prob231cd(initialization = "km++", num_trials=20)
 #obj_stats2 = prob231cd_recover(initialization = "km++")
 #print obj_stats2
+
+prob231g()

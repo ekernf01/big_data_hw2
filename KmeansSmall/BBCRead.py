@@ -87,7 +87,7 @@ class BBCData():
             termids_sorted = self.avg_tfidf_by_class.sort(c, ascending = False).index.copy()
             tfidfs_sorted = self.avg_tfidf_by_class.sort(c, ascending = False)[[c]].copy()
             bestpairs = [(termids_sorted[rank], float(tfidfs_sorted.iloc[rank])) for rank in range(5)]
-            five_best[c] = [(self.vocab[termid], tfidf) for (termid, tfidf) in bestpairs]
+            five_best[c] = [(self.vocab[termid - 1], tfidf) for (termid, tfidf) in bestpairs]
         return five_best
 
     def get_dense_data(self):

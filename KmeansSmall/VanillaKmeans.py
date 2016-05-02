@@ -37,6 +37,8 @@ class KmeansCall:
             def line2list(line):
                 return list([float(token.strip()) for token in line[0].split()])
             self.cluster_centers = [line2list(line) for line in csv.reader(center_file)]
+        elif self.initialization == "firstpoints":
+            self.cluster_centers = [list(self.data.iloc[k, :]) for k in range(self.num_clusters)]
         else:
             rand_idx = np.random.choice(a=self.nsample, size=self.num_clusters, replace=False)
             self.cluster_centers = [list(self.data.iloc[rand_idx[k], :]) for k in range(self.num_clusters)]
@@ -59,6 +61,7 @@ class KmeansCall:
         for k in range(self.num_clusters):
             if counts[k]==0:
                 rand_idx = np.random.choice(self.nsample)
+                warnings.warn("Re-initializing an empty cluster to a random datum.")
                 self.cluster_centers[k] = list(self.data.iloc[rand_idx, :])
             else:
                 self.cluster_centers[k] = self.cluster_centers[k] / counts[k]
