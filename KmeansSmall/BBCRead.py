@@ -18,7 +18,7 @@ class BBCData():
         self.num_classes = 0
         self.initialize_classes()
         self.avg_tfidf_by_class = []
-        self.get_tfidf_by_class()
+        self.five_best = self.get_tfidf_by_class()
         return
 
     def get_tfidf_and_sizes(self):
@@ -95,10 +95,9 @@ class BBCData():
         :return: pd dataframe where each row corresponds to a document.
          class labels reside in the first column, and tfidf values indexed by term id's thereafter.
         """
-        dense_data = pd.DataFrame(0, index = self.docids, columns = ["class_label"] + list(self.termids))
+        dense_data = pd.DataFrame(0, index = list(self.docids), columns = list(self.termids))
         for i, row in self.freq_mtx.iterrows():
             (termid, docid, freq, tfidf) = [self.freq_mtx.iloc[i, j] for j in range(4)]
             dense_data.loc[docid, termid] = tfidf
-        for termid in range(len(self.vocab)):
-            dense_data.class_label[termid] = self.class_mtx.class_label[termid]
+        assert dense_data.shape == (len(self.docids), len(self.termids))
         return dense_data

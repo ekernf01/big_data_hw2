@@ -24,24 +24,28 @@ class KmeansReducer:
 
 
     def reduce(self, uid, values):
+        values = [eval(text_dict) for text_dict in values]
         c = Cluster()
         c.uid = uid
-        c_total = 0
+        c_total = len(values)
         sqdist = 0.0
 
         # set cluster center to sum of members
-        for assigned_doc in values:
-            if uid == assigned_doc["cluster_uid"]:
-                c.tfidf = assigned_doc["doc"]
+        for doc in values:
+            for tokenid in doc:
+                if c.tfidf.has_key(tokenid):
+                    c.tfidf[tokenid] += doc[tokenid]
+                else:
+                    c.tfidf[tokenid] = doc[tokenid]
+
 
         # set cluster center, currently the sum, to the mean
         for tokenid in c.tfidf:
             c.tfidf[tokenid] = c.tfidf[tokenid] / float(c_total)
 
         # set sqdist to the squared sum of deviations from mean
-        for assigned_doc in values:
-            if uid == assigned_doc["cluster_uid"]:
-                sqdist += MathUtil.compute_distance(tfidf, assigned_doc["doc"], squared=True)
+        for doc in values:
+            sqdist += MathUtil.compute_distance(c.tfidf, doc, squared=True)
 
         # Output the cluster center into file: clusteri
         self.emit("cluster" + str(c.uid), str(c))

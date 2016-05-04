@@ -17,8 +17,6 @@ class EMCall(KmeansCall):
         self.xgivenz = np.zeros(shape = (self.nsample, self.num_clusters))
         self.cluster_probs = np.ones(self.num_clusters) / float(self.num_clusters)
         self.cluster_covs = [np.identity(self.dimension) for k in range(self.num_clusters)]
-        self.log_likelihood = float("-inf")
-        self.log_likelihood_record = []
         self.cov_reg = cov_reg
         self.verbose = verbose
         return
@@ -43,13 +41,16 @@ class EMCall(KmeansCall):
                 # (x - \mu)^T \hat \Sigma^{-1} (x - \mu)
                 self.xgivenz[i, k] = mvn.pdf(row, mean=self.cluster_centers[k],
                                                   cov= self.cluster_covs[k])
+        return
 
     def update_membership_probs(self):
         self.update_xgivenz()
         for i in range(self.nsample):
             post = [self.xgivenz[i, k] * self.cluster_probs[k] for k in range(self.num_clusters)]
             self.membership_probs[i, :] = post / sum(post)
-            self.class_label[i] = np.random.choice(range(self.num_clusters), size = 1, p = post / sum(post))
+            #self.class_label[i] = np.random.choice(range(self.num_clusters), size = 1, p = post / sum(post))
+            self.class_label[i] =  post.index(max(post))
+        return
 
     def update_cluster_means(self):
         for k in range(self.num_clusters):
@@ -60,6 +61,7 @@ class EMCall(KmeansCall):
         for i, row in self.data.iterrows():
             for k in range(self.num_clusters):
                 counts[k] += self.membership_probs[i, k]
+                assert i < self.membership_probs.shape[0]
                 self.cluster_centers[k] += self.membership_probs[i, k] * row
         #Divide sum by count to get average, or if count is zero, reinitialize to a random datapoint.
         for k in range(self.num_clusters):
@@ -67,14 +69,13 @@ class EMCall(KmeansCall):
         return
 
     def update_cluster_covs(self):
-
         #zero out current covar to avoid mem allocation
         for k in range(self.num_clusters):
             for d1 in range(self.dimension):
                 for d2 in range(self.dimension):
                     self.cluster_covs[k][d1, d2] = 0
-        counts = [0 for k in range(self.num_clusters)]
 
+        counts = [0 for k in range(self.num_clusters)]
         #get maximizer of expected loglik given cluster memberships:
         #  (\sum_i r_ik (x_i - \mu_k)(x_i - \mu_k)^T) / \sum_i r_ik
         #get numerator
@@ -83,13 +84,11 @@ class EMCall(KmeansCall):
                 counts[k] += self.membership_probs[i, k]
                 centered = row - self.cluster_centers[k]
                 self.cluster_covs[k] = self.cluster_covs[k] + np.outer(centered, centered*self.membership_probs[i, k])
-
         # divide by number of contributions and regularize
         for k in range(self.num_clusters):
             self.cluster_covs[k] = (1 - self.cov_reg) * self.cluster_covs[k] / counts[k]
             for d in range(self.dimension):
                 self.cluster_covs[k][d, d] += self.cov_reg
-
         return
 
     def update_cluster_probs(self):
@@ -106,14 +105,14 @@ class EMCall(KmeansCall):
         # \prod_i Pr(x)
         # = \prod_i \sum_k P(x_i, z = k)
         # = \prod_i \sum_k P(x_i|z = k)\pi_k
-        self.log_likelihood = 0
+        self.obj = 0
         for i in range(self.nsample):
             lik_i = 0
             for k in range(self.num_clusters):
                 lik_i += self.xgivenz[i, k] * self.cluster_probs[k]
-            self.log_likelihood += np.log(lik_i)
+            self.obj += np.log(lik_i)
 
-        return self.log_likelihood
+        return self.obj
 
     def run_em(self, maxiter = 100):
         reached_tol = False
@@ -122,10 +121,10 @@ class EMCall(KmeansCall):
                 self.plot()
             self.update_membership_probs()
             self.update_cluster_params()
-            old_obj = self.log_likelihood
+            old_obj = self.obj
             self.update_log_likelihood()
-            self.log_likelihood_record.append(self.log_likelihood)
-            if abs(self.log_likelihood - old_obj) < 0.0000001:
+            self.obj_record.append(self.obj)
+            if abs(self.obj - old_obj) < 0.0000001:
                 reached_tol = True
                 break
 

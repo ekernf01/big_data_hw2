@@ -27,7 +27,7 @@ def prob231b(initialization = "regular"):
     cluster_counts = [2,3,5,10,15,20]
     kmcalls = [0 for i in cluster_counts]
     for i, num_clusters in enumerate(cluster_counts):
-        kmcalls[i] = KmeansCall(features_only, labels_only, num_clusters, initialization)
+        kmcalls[i] = KmeansCall(features_only, num_clusters, initialization)
         kmcalls[i].run_kmeans(verbose = False)
 
         df_to_plot = kmcalls[i].data.copy()
@@ -44,7 +44,7 @@ def prob231cd(initialization, num_trials = 20):
     prob231c_plot_df = pd.DataFrame({"x1":synth_data.x1.copy(), "x2":synth_data.x2.copy(), "data":"data"})
     for i in range(num_trials):
         print "prob231cd iter " + str(i)
-        kmcalls[i] = KmeansCall(features_only, labels_only, num_clusters_231cd, initialization)
+        kmcalls[i] = KmeansCall(features_only, num_clusters_231cd, initialization)
         kmcalls[i].run_kmeans(verbose = False)
         for k in range(num_clusters_231cd):
             prob231c_plot_df.loc[len(prob231c_plot_df)] = np.concatenate((["centers"], kmcalls[i].cluster_centers[k]))

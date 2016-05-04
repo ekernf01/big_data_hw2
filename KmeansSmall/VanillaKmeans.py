@@ -12,16 +12,25 @@ class KmeansCall:
     #It needs to be the first column.
     """
 
-    def __init__(self, data, class_label, num_clusters = 20, initialization = "km++", init_centers_path = None):
+    def __init__(self, data, num_clusters = 20, initialization = "km++", init_centers_path = None):
+        #basics
         self.initialization = initialization
-        self.data = data
-        self.class_label = class_label
         self.nsample = data.shape[0]
         self.dimension = data.shape[1]
         self.num_clusters = num_clusters
+        self.data = data
+
+        #sanitize input index so i can use pd.DataFrame.iterrows()
+        self.data.index = range(self.nsample)
+        self.data.columns = range(self.dimension)
+
+        #Empty containers and initial centroids
+        self.class_label = ["" for i in range(self.nsample)]
         self.cluster_centers = []
         self.initialize_centers(init_centers_path)
         self.obj = float("inf")
+        self.obj_record = []
+
 
     def initialize_centers(self, init_centers_path):
         if self.initialization == "km++":
@@ -60,12 +69,12 @@ class KmeansCall:
         #Divide sum by count to get average, or if count is zero, reinitialize to a random datapoint.
         for k in range(self.num_clusters):
             if counts[k]==0:
+                #pass
                 rand_idx = np.random.choice(self.nsample)
                 warnings.warn("Re-initializing an empty cluster to a random datum.")
                 self.cluster_centers[k] = list(self.data.iloc[rand_idx, :])
             else:
                 self.cluster_centers[k] = self.cluster_centers[k] / counts[k]
-        return
 
     def update_labels(self, smaller_than_k = None):
         """
@@ -116,6 +125,7 @@ class KmeansCall:
                 print "In iteration " + str(i) + " , objective is " + str(obj)
             #Save time by only checking objective every 5 iterations
             if i % 5 == 0:
+                self.obj_record.append(self.obj)
                 old_obj = self.obj
                 self.obj = self.get_objective()
                 if abs(self.obj - old_obj) < 0.0000001:

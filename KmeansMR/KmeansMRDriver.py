@@ -7,8 +7,8 @@ import HDFSUtil
 
 
 # TODO: change these to work with your settings
-KMEANS_HDFS_PATH = "Desktop/spring_2016/big_data/hw2/big_data_hw2_code/KmeansMR/kmeans_hdfs"
-HADOOP_PREFIX = "/usr/local/Cellar/hadoop/2.7.1/bin"
+KMEANS_HDFS_PATH = "kmeans_hdfs/kmeans"
+HADOOP_PREFIX = "/usr/local/Cellar/hadoop/2.7.1"
 
 
 class KmeansMRDriver(object):
@@ -26,7 +26,7 @@ class KmeansMRDriver(object):
         centers and within cluster distance into outputpath.
         """
         hadoop = os.path.join(HADOOP_PREFIX, "bin", "hadoop")
-        jarfile = os.path.join(HADOOP_PREFIX, "contrib", "streaming", "hadoop-streaming-1.2.1.jar")
+        jarfile = os.path.join(HADOOP_PREFIX, "libexec/share/hadoop/tools/sources/hadoop-streaming-2.7.1-sources.jar")
         curdirname = os.path.dirname(os.path.realpath(__file__))
         mapper_file = "KmeansMapper.py"
         reducer_file = "KmeansReducer.py"
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     driver = KmeansMRDriver(20)
 
     dictionary_path = KMEANS_HDFS_PATH + "/dictionary.txt"
-    inputpath = KMEANS_HDFS_PATH + "/tfidf.txt"
+    inputpath       = KMEANS_HDFS_PATH + "/tfidf.txt"
 
     driver.load_dictionary(dictionary_path)
 
@@ -144,13 +144,13 @@ if __name__ == '__main__':
     for i in range(numiter):
         outputpath = KMEANS_HDFS_PATH + "/output/cluster" + str(i+1)
         if i == 0:
-            cache = KMEANS_HDFS_PATH + "/cluster0"
+            cache  = KMEANS_HDFS_PATH + "/cluster0"
         else:
-            cache = KMEANS_HDFS_PATH + "/output/cluster" + str(i)
+            cache  = KMEANS_HDFS_PATH + "/output/cluster" + str(i)
 
         driver.run_iter(inputpath, outputpath, cache, i+1)
 
-        clusters = driver.load_cluster(outputpath + "/part-00000")
+        clusters  = driver.load_cluster (outputpath + "/part-00000")
         driver.print_clusters(clusters)
         distances = driver.load_distance(outputpath + "/part-00000")
         driver.print_distances(distances)
